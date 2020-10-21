@@ -7,12 +7,12 @@ namespace RayLibSweeper
     {
         static void Main(string[] args)
         {
-            int height = 20;
-            int width = 20;
+            int height = 30;
+            int width = 30;
             
 
             Map map = new Map(width, height);
-            Bomb bomb = new Bomb(map, 50);
+            Bomb bomb = new Bomb(map, 200);
             map.Generate(bomb);
             //map.Write();
 
