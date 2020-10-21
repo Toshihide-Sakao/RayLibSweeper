@@ -151,6 +151,27 @@ namespace RayLibSweeper
         public void Clicked(int x, int y)
         {
             vissibleMap[y, x] = 1;
+            bool looooop = intMap[y, x] == 0;
+            if (looooop)
+            {
+                for (int xfor = -1; xfor < 2; xfor++)
+                {
+                    for (int yfor = -1; yfor < 2; yfor++)
+                    {
+                        vissibleMap[y + yfor, x + xfor] = 1;
+
+                        if (intMap[y + yfor, x + xfor] == 0)
+                        {
+                            
+                        }
+                    }
+                }
+            }
+        }
+
+        void checkForEmpty(int x, int y)
+        {
+
         }
     }
 }

@@ -13,7 +13,7 @@ namespace RayLibSweeper
             
 
             Map map = new Map(width, height);
-            Bomb bomb = new Bomb(map, 200);
+            Bomb bomb = new Bomb(map, 100);
             map.Generate(bomb);
             //map.Write();
 
