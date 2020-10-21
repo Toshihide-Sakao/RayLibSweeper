@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Numerics;
+using System;
 using Raylib_cs;
 
 namespace RayLibSweeper
@@ -30,9 +31,22 @@ namespace RayLibSweeper
 
                 map.Write();
                 
+                if (Raylib.IsMouseButtonPressed(0))
+                {
+                    PressedTiles(map);
+                }
+                
 
                 Raylib.EndDrawing();
             }
+        }
+
+        static void PressedTiles(Map map)
+        {
+            int xbruh = Raylib.GetMouseX() / map.sqaureSpace;
+            int ybruh = Raylib.GetMouseY() / map.sqaureSpace;
+
+            map.Clicked(xbruh, ybruh);
         }
     }
 }
