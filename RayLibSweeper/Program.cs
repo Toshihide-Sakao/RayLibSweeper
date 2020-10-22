@@ -13,7 +13,7 @@ namespace RayLibSweeper
             
 
             Map map = new Map(width, height);
-            Bomb bomb = new Bomb(map, 100);
+            Bomb bomb = new Bomb(map, 200);
             map.Generate(bomb);
             //map.Write();
 
@@ -31,9 +31,13 @@ namespace RayLibSweeper
 
                 map.Write();
                 
-                if (Raylib.IsMouseButtonPressed(0))
+                if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
                 {
-                    PressedTiles(map);
+                    PressedTiles(map, 0);
+                }
+                else if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON))
+                {
+                    PressedTiles(map, 1);
                 }
                 
 
@@ -41,12 +45,19 @@ namespace RayLibSweeper
             }
         }
 
-        static void PressedTiles(Map map)
+        static void PressedTiles(Map map, int mouseButton)
         {
             int xbruh = Raylib.GetMouseX() / map.sqaureSpace;
             int ybruh = Raylib.GetMouseY() / map.sqaureSpace;
-
-            map.Clicked(xbruh, ybruh);
+            if (mouseButton == 0)
+            {
+                map.Clicked(xbruh, ybruh);
+            }
+            else
+            {
+                map.RightClicked(xbruh, ybruh);
+            }
+            
         }
     }
 }

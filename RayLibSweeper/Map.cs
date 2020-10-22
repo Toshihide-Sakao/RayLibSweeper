@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Raylib_cs;
 
@@ -15,6 +16,7 @@ namespace RayLibSweeper
         public Color bombColor = new Color(156, 49, 37, 255);
         public Color grey = new Color(187, 190, 196, 255);
         public Color clicked = new Color(70, 219, 93, 255);
+        public Color flagColor = new Color(65, 141, 240, 255);
 
 
 
@@ -59,34 +61,28 @@ namespace RayLibSweeper
             {
                 for (int changeY = -1; changeY < 2; changeY++)
                 {
-                    bool xfirst = checkX != 0 || changeX != -1;
-                    bool xlast = checkX != width - 1 || changeX != 1;
-                    bool yfirst = checkY != 0 || changeY != -1;
-                    bool ylast = checkY != height - 1 || changeY != 1;
-                    bool middle = changeX != 0 || changeY != 0;
-                    if (xfirst)
+                    if (IfBySide(checkX, checkY, changeX, changeY))
                     {
-                        if (xlast)
+                        if (intMap[checkY + changeY, checkX + changeX] == 99)
                         {
-                            if (yfirst)
-                            {
-                                if (ylast)
-                                {
-                                    if (middle)
-                                    {
-                                        if (intMap[checkY + changeY, checkX + changeX] == 99)
-                                        {
-                                            nearbyBombs++;
-                                        }
-                                    }
-                                }
-                            }
+                            nearbyBombs++;
                         }
                     }
                 }
             }
 
             return nearbyBombs;
+        }
+
+        bool IfBySide(int x, int y, int changeX, int changeY)
+        {
+            bool xfirst = x != 0 || changeX != -1;
+            bool xlast = x != width - 1 || changeX != 1;
+            bool yfirst = y != 0 || changeY != -1;
+            bool ylast = y != height - 1 || changeY != 1;
+            bool middle = changeX != 0 || changeY != 0;
+
+            return xfirst && xlast && yfirst && ylast && middle;
         }
 
         public Map(int xOk, int yOk)
@@ -140,6 +136,10 @@ namespace RayLibSweeper
                             Raylib.DrawRectangle(x * sqaureSpace, y * sqaureSpace, sqaureWidth, sqaureWidth, bombColor);
                         }
                     }
+                    else if (vissibleMap[y, x] == 2)
+                    {
+                        Raylib.DrawRectangle(x * sqaureSpace, y * sqaureSpace, sqaureWidth, sqaureWidth, flagColor);
+                    }
                     else
                     {
                         Raylib.DrawRectangle(x * sqaureSpace, y * sqaureSpace, sqaureWidth, sqaureWidth, grey);
@@ -151,27 +151,76 @@ namespace RayLibSweeper
         public void Clicked(int x, int y)
         {
             vissibleMap[y, x] = 1;
-            bool looooop = intMap[y, x] == 0;
-            if (looooop)
+            if (intMap[y, x] == 0)
             {
                 for (int xfor = -1; xfor < 2; xfor++)
                 {
                     for (int yfor = -1; yfor < 2; yfor++)
                     {
-                        vissibleMap[y + yfor, x + xfor] = 1;
-
-                        if (intMap[y + yfor, x + xfor] == 0)
+                        if (IfBySide(x, y, xfor, yfor))
                         {
-                            
+                            vissibleMap[y + yfor, x + xfor] = 1;
+                            List<Vector2> emptyList = checkForEmpty(x + xfor, y + yfor);
+                            for (int i = 0; i < emptyList.Count; i++)
+                            {
+                                ChnageEmptys(emptyList[i]);
+                            }
                         }
                     }
                 }
             }
         }
 
-        void checkForEmpty(int x, int y)
+        public void RightClicked(int x, int y)
         {
+            if (vissibleMap[y, x] == 2)
+            {
+                vissibleMap[y, x] = 0;
+            }
+            else
+            {
+                vissibleMap[y, x] = 2;
+            }
+        }
 
+        List<Vector2> checkForEmpty(int x, int y)
+        {
+            List<Vector2> emptyPlaces = new List<Vector2>();
+            for (int xfor = -1; xfor < 2; xfor++)
+            {
+                for (int yfor = -1; yfor < 2; yfor++)
+                {
+                    if (IfBySide(x, y, xfor, yfor))
+                    {
+                        if (intMap[y + yfor, x + xfor] == 0)
+                        {
+                            emptyPlaces.Add(new Vector2(x + xfor, y + yfor));
+                        }
+                    }
+
+                }
+            }
+            return emptyPlaces;
+        }
+
+        void ChnageEmptys(Vector2 ok)
+        {
+            for (int xfor = -1; xfor < 2; xfor++)
+            {
+                for (int yfor = -1; yfor < 2; yfor++)
+                {
+                    if (IfBySide((int)ok.X, (int)ok.Y, xfor, yfor))
+                    {
+                        if (intMap[(int)(ok.Y + yfor), (int)(ok.X + xfor)] == 0)
+                        {
+                            vissibleMap[(int)(ok.Y + yfor), (int)(ok.X + xfor)] = 1;
+                        }
+                    }
+                }
+            }
         }
     }
+
+
 }
+
