@@ -17,6 +17,7 @@ namespace RayLibSweeper
         public Color grey = new Color(187, 190, 196, 255);
         public Color clicked = new Color(70, 219, 93, 255);
         public Color flagColor = new Color(65, 141, 240, 255);
+        public bool gameOver = false;
 
 
 
@@ -150,25 +151,33 @@ namespace RayLibSweeper
 
         public void Clicked(int x, int y)
         {
-            vissibleMap[y, x] = 1;
-            if (intMap[y, x] == 0)
+            if (intMap[y, x] == 99)
             {
-                for (int xfor = -1; xfor < 2; xfor++)
+                gameOver = true;
+            }
+            else
+            {
+                vissibleMap[y, x] = 1;
+                if (intMap[y, x] == 0)
                 {
-                    for (int yfor = -1; yfor < 2; yfor++)
+                    for (int xfor = -1; xfor < 2; xfor++)
                     {
-                        if (IfBySide(x, y, xfor, yfor))
+                        for (int yfor = -1; yfor < 2; yfor++)
                         {
-                            vissibleMap[y + yfor, x + xfor] = 1;
-                            List<Vector2> emptyList = checkForEmpty(x + xfor, y + yfor);
-                            for (int i = 0; i < emptyList.Count; i++)
+                            if (IfBySide(x, y, xfor, yfor))
                             {
-                                ChnageEmptys(emptyList[i]);
+                                vissibleMap[y + yfor, x + xfor] = 1;
+                                List<Vector2> emptyList = checkForEmpty(x + xfor, y + yfor);
+                                for (int i = 0; i < emptyList.Count; i++)
+                                {
+                                    ChnageEmptys(emptyList[i]);
+                                }
                             }
                         }
                     }
                 }
             }
+
         }
 
         public void RightClicked(int x, int y)
