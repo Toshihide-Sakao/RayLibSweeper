@@ -11,9 +11,10 @@ namespace RayLibSweeper
             int height = 30;
             int width = 30;
             bool again = false;
+            int bombs = 120;
 
             Map map = new Map(width, height);
-            Bomb bomb = new Bomb(map, 60);
+            Bomb bomb = new Bomb(map, bombs);
             map.Generate(bomb);
             //map.Write();
 
@@ -48,7 +49,7 @@ namespace RayLibSweeper
                     Raylib.DrawRectangle(40, 200, 300, 50, Color.WHITE);
                     Raylib.DrawText("play again", 50, 200, 40, Color.BLACK);
 
-                    StartMenuPress(map, bomb, width, height);
+                    StartMenuPress(map, bomb, width, height, bombs);
                 }
 
 
@@ -71,13 +72,13 @@ namespace RayLibSweeper
 
         }
 
-        static void StartMenuPress(Map map, Bomb bomb, int width, int height)
+        static void StartMenuPress(Map map, Bomb bomb, int width, int height, int bombint)
         {
             Vector2 pos = Raylib.GetMousePosition();
 
             if (pos.X < 340 && pos.X > 40 && pos.Y < 240 && pos.Y > 200 && Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
             {
-                bomb = new Bomb(map, 200);
+                bomb = new Bomb(map, bombint);
                 map.Generate(bomb);
 
                 map.gameOver = false;

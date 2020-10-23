@@ -121,10 +121,13 @@ namespace RayLibSweeper
             {
                 for (int y = 0; y < height; y++)
                 {
+                    //If clicked and should show real values.
                     if (vissibleMap[y, x] == 1)
                     {
+                        //Draw empty tile
                         Raylib.DrawRectangle(x * sqaureSpace, y * sqaureSpace, sqaureWidth, sqaureWidth, clicked);
 
+                        //Draw tiles with numbers
                         for (int i = 1; i < 10; i++)
                         {
                             if (i == intMap[y, x])
@@ -132,15 +135,18 @@ namespace RayLibSweeper
                                 Raylib.DrawText(i.ToString(), x * sqaureSpace, y * sqaureSpace, 30, Color.BLACK);
                             }
                         }
+                        //Draws the bomb
                         if (intMap[y, x] == 99)
                         {
                             Raylib.DrawRectangle(x * sqaureSpace, y * sqaureSpace, sqaureWidth, sqaureWidth, bombColor);
                         }
                     }
+                    //If flagged
                     else if (vissibleMap[y, x] == 2)
                     {
                         Raylib.DrawRectangle(x * sqaureSpace, y * sqaureSpace, sqaureWidth, sqaureWidth, flagColor);
                     }
+                    //if not clicked or flagged(so b assically hidden)
                     else
                     {
                         Raylib.DrawRectangle(x * sqaureSpace, y * sqaureSpace, sqaureWidth, sqaureWidth, grey);
@@ -149,24 +155,37 @@ namespace RayLibSweeper
             }
         }
 
+        //When right click
         public void Clicked(int x, int y)
         {
+            //If bomb gameover
             if (intMap[y, x] == 99)
             {
                 gameOver = true;
             }
+            //Make tile vissible
             else
             {
+                //Makes tile vissibel
                 vissibleMap[y, x] = 1;
+
+                //If tile is empty
                 if (intMap[y, x] == 0)
                 {
+                    //Checking sorrounding
                     for (int xfor = -1; xfor < 2; xfor++)
                     {
                         for (int yfor = -1; yfor < 2; yfor++)
                         {
+                            //If it is by side
                             if (IfBySide(x, y, xfor, yfor))
                             {
+                                //make sorrounding empties vissible
                                 vissibleMap[y + yfor, x + xfor] = 1;
+                                int bruhruhrhruuhrX = x + xfor;
+                                int burfhhffjhbuofubisaY = y + yfor;
+
+                                //Making list of sorrounding empty of the empty above.
                                 List<Vector2> emptyList = checkForEmpty(x + xfor, y + yfor);
                                 for (int i = 0; i < emptyList.Count; i++)
                                 {
@@ -203,6 +222,7 @@ namespace RayLibSweeper
                     {
                         if (intMap[y + yfor, x + xfor] == 0)
                         {
+                            okbro(x + xfor, y + yfor);
                             emptyPlaces.Add(new Vector2(x + xfor, y + yfor));
                         }
                     }
@@ -210,6 +230,20 @@ namespace RayLibSweeper
                 }
             }
             return emptyPlaces;
+        }
+
+        void okbro(int x, int y)
+        {
+            for (int xfor = -1; xfor < 2; xfor++)
+            {
+                for (int yfor = -1; yfor < 2; yfor++)
+                {
+                    if (IfBySide(x, y, xfor, yfor))
+                    {
+                        vissibleMap[y + yfor, x + xfor] = 1;
+                    }
+                }
+            }
         }
 
         void ChnageEmptys(Vector2 ok)
